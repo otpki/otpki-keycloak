@@ -1,17 +1,5 @@
 ARG KEYCLOAK_VERSION=26.5.4
 
-# build keycloak theme
-FROM --platform=$BUILDPLATFORM node:25.6.1-alpine AS theme-builder
-WORKDIR /app
-RUN apk update && \
-    apk add --no-cache openjdk25 maven
-
-COPY theme/package*.json ./
-RUN npm ci
-
-COPY theme/ ./
-RUN npm run build-keycloak-theme
-
 
 # shared keycloak base (env for builder/runtime)
 FROM quay.io/keycloak/keycloak:${KEYCLOAK_VERSION} AS kc-base
@@ -26,7 +14,7 @@ ENV KC_DB=postgres \
 
 # build optimized keycloak
 FROM kc-base AS kc-builder
-COPY --from=theme-builder /app/dist_keycloak/keycloak-theme-for-kc-all-other-versions.jar /opt/keycloak/providers/
+COPY theme/dist_keycloak/keycloak-theme-for-kc-all-other-versions.jar /opt/keycloak/providers/
 RUN /opt/keycloak/bin/kc.sh build \
     --db=postgres \
     --health-enabled=true \

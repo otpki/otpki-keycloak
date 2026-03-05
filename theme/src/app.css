@@ -4,6 +4,41 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@font-face {
+	font-family: 'Geist';
+	src: url('/fonts/geist/Geist/webfonts/Geist[wght].woff2') format('woff2');
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Geist Mono';
+	src: url('/fonts/geist/GeistMono/webfonts/GeistMono[wght].woff2')
+		format('woff2');
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Geist';
+	src: url('/fonts/geist/Geist/webfonts/Geist-Italic[wght].woff2')
+		format('woff2');
+	font-weight: 100 900;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Geist Mono';
+	src: url('/fonts/geist/GeistMono/webfonts/GeistMono-Italic[wght].woff2')
+		format('woff2');
+	font-weight: 100 900;
+	font-style: italic;
+	font-display: swap;
+}
+
 :root {
 	--radius: 0.625rem;
 	--background: oklch(1 0 0);
@@ -37,6 +72,12 @@
 	--sidebar-accent-foreground: oklch(0.208 0.042 265.755);
 	--sidebar-border: oklch(0.929 0.013 255.508);
 	--sidebar-ring: oklch(0.704 0.04 256.788);
+	--font-geist-sans:
+		'Geist', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+		'Inter', 'Segoe UI', 'Roboto', sans-serif;
+	--font-geist-mono:
+		'Geist Mono', ui-monospace, SFMono-Regular, 'Roboto Mono', Menlo, Monaco,
+		'Liberation Mono', 'DejaVu Sans Mono', 'Courier New', monospace;
 }
 
 .dark {
@@ -74,6 +115,8 @@
 }
 
 @theme inline {
+	--font-sans: var(--font-geist-sans);
+	--font-mono: var(--font-geist-mono);
 	--radius-sm: calc(var(--radius) - 4px);
 	--radius-md: calc(var(--radius) - 2px);
 	--radius-lg: var(--radius);

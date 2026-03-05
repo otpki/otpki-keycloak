@@ -1,0 +1,15 @@
+name: Dummy CI
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  dummy:
+    name: dummy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Always pass
+        run: echo "Dummy check passed"

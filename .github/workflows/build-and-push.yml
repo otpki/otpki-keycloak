@@ -2,18 +2,124 @@ name: Build and Push Image
 
 on:
   workflow_dispatch:
+    inputs:
+      disable_jar_cache:
+        description: 'Disable JAR cache and force theme JAR rebuild'
+        required: false
+        default: false
+        type: boolean
 
 permissions:
+  id-token: write
   contents: read
 
+env:
+  AWS_ROLE_ARN: ${{ vars.AWS_ROLE_ARN }}
+  AWS_REGION: ${{ vars.AWS_REGION }}
+  BUCKET_NAME: ${{ vars.AWS_ARTIFACT_BUCKET_NAME }}
+  S3_PREFIX: ${{ vars.S3_PREFIX != '' && vars.S3_PREFIX || 'artifacts/otpki-keycloak' }}
+
 jobs:
-  build-and-push:
+  build-theme-jars:
+    name: Build theme JARs
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout tagged commit
+      - name: Checkout source
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '25'
+          cache: npm
+          cache-dependency-path: theme/package-lock.json
+
+      - name: Cache prebuilt theme JARs
+        if: ${{ inputs.disable_jar_cache != true }}
+        id: theme-jar-cache
+        uses: actions/cache@v4
+        with:
+          path: theme/dist_keycloak/*.jar
+          key: theme-jars-${{ runner.os }}-${{ hashFiles('theme/package-lock.json', 'theme/src/**', 'theme/vite.config.ts', 'theme/svelte.config.js', 'theme/tsconfig.json') }}
+          restore-keys: |
+            theme-jars-${{ runner.os }}-
+
+      - name: Build Keycloak theme JAR
+        if: ${{ inputs.disable_jar_cache == true || steps.theme-jar-cache.outputs.cache-hit != 'true' }}
+        working-directory: theme
+        run: |
+          npm ci
+          npm run build-keycloak-theme
+
+      - name: Validate JAR outputs
+        shell: bash
+        run: |
+          jar_count=$(find theme/dist_keycloak -maxdepth 1 -type f -name '*.jar' | wc -l | tr -d ' ')
+          if [ "$jar_count" -eq 0 ]; then
+            echo "No JAR found in theme/dist_keycloak"
+            exit 1
+          fi
+
+          echo "Found $jar_count JAR file(s)"
+
+      - name: Upload theme JAR artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: keycloak-theme-jars
+          path: theme/dist_keycloak/*.jar
+          if-no-files-found: error
+          retention-days: 1
+
+  upload-theme-jars-to-s3:
+    name: Upload theme JARs to S3
+    runs-on: ubuntu-latest
+    needs: build-theme-jars
+    if: always() && needs.build-theme-jars.result == 'success'
+    steps:
+      - name: Download theme JAR artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: keycloak-theme-jars
+          path: artifacts
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Upload theme JARs to S3
+        shell: bash
+        run: |
+          for jar_path in artifacts/*.jar; do
+            jar_name=$(basename "$jar_path")
+            aws s3 cp "$jar_path" "s3://${{ env.BUCKET_NAME }}/${{ env.S3_PREFIX }}/${jar_name}"
+            echo "Uploaded $jar_name"
+          done
+
+      - name: List uploaded JARs
+        shell: bash
+        run: |
+          aws s3 ls "s3://${{ env.BUCKET_NAME }}/${{ env.S3_PREFIX }}/"
+
+  build-and-push-image:
+    name: Build and push Docker image
+    runs-on: ubuntu-latest
+    needs: build-theme-jars
+    if: always() && needs.build-theme-jars.result == 'success'
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Download theme JAR artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: keycloak-theme-jars
+          path: theme/dist_keycloak
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -31,6 +137,8 @@ jobs:
       - name: Build and push multi-arch image
         uses: docker/build-push-action@v6
         with:
+          context: .
+          file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ vars.REGISTRY_URL }}/otpki-keycloak:latest

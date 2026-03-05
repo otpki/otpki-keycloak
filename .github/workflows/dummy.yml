@@ -1,0 +1,11 @@
+name: Dummy CI
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  dummy:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Dummy check passed"

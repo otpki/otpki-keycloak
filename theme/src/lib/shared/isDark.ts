@@ -1,18 +1,18 @@
-const SESSION_STORAGE_KEY = 'isDark';
+const SESSION_STORAGE_KEY = "isDark";
 
 export function getIsDark(): boolean {
   from_url: {
     const url = new URL(window.location.href);
-    const value = url.searchParams.get('dark');
+    const value = url.searchParams.get("dark");
 
     if (value === null) {
       break from_url;
     }
 
-    url.searchParams.delete('dark');
-    window.history.replaceState({}, '', url.toString());
+    url.searchParams.delete("dark");
+    window.history.replaceState({}, "", url.toString());
 
-    const isDark = value === 'true';
+    const isDark = value === "true";
     sessionStorage.setItem(SESSION_STORAGE_KEY, `${isDark}`);
 
     return isDark;
@@ -25,8 +25,11 @@ export function getIsDark(): boolean {
       break from_session_storage;
     }
 
-    return value === 'true';
+    return value === "true";
   }
 
-  return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  return (
+    window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches
+  );
 }

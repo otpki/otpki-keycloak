@@ -1,6 +1,5 @@
 ARG KEYCLOAK_VERSION=26.5.4
 
-
 # shared keycloak base (env for builder/runtime)
 FROM quay.io/keycloak/keycloak:${KEYCLOAK_VERSION} AS kc-base
 ENV KC_DB=postgres \
@@ -8,9 +7,21 @@ ENV KC_DB=postgres \
     KC_CACHE_STACK=jdbc-ping \
     KC_METRICS_ENABLED=true \
     KC_HEALTH_ENABLED=true \
+    KC_TRACING_ENABLED=true \
+    KC_TELEMETRY_PROTOCOL=grpc \
+    KC_TRACING_PROTOCOL=grpc \
+    KC_TELEMETRY_LOGS_ENABLED=true \
+    KC_TELEMETRY_LOGS_PROTOCOL=grpc \
+    KC_TELEMETRY_LOGS_LEVEL=info \
+    KC_TELEMETRY_METRICS_ENABLED=true \
+    KC_TELEMETRY_METRICS_PROTOCOL=grpc \
+    KC_HTTP_METRICS_HISTOGRAMS_ENABLED=true \
+    KC_CACHE_METRICS_HISTOGRAMS_ENABLED=true \
+    KC_EVENT_METRICS_USER_ENABLED=true \
     KC_HTTP_ENABLED=true \
     KC_PROXY_HEADERS=xforwarded \
-    KC_HTTP_RELATIVE_PATH=/kc
+    KC_HTTP_RELATIVE_PATH=/kc \
+    KC_FEATURES=opentelemetry-logs,opentelemetry-metrics
 
 # build optimized keycloak
 FROM kc-base AS kc-builder
@@ -18,7 +29,9 @@ COPY theme/dist_keycloak/keycloak-theme-for-kc-all-other-versions.jar /opt/keycl
 RUN /opt/keycloak/bin/kc.sh build \
     --db=postgres \
     --health-enabled=true \
-    --metrics-enabled=true
+    --metrics-enabled=true \
+    --tracing-enabled=true \
+    --features="opentelemetry-logs,opentelemetry-metrics"
 
 # keycloak runtime image
 FROM kc-base

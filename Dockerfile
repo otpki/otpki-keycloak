@@ -1,4 +1,4 @@
-ARG KEYCLOAK_VERSION=26.7.2
+ARG KEYCLOAK_VERSION=26.7.4
 
 # PostgreSQL client
 #
@@ -69,6 +69,7 @@ ENV KC_DB=postgres \
     KC_PROXY_HEADERS=xforwarded \
     KC_HTTP_RELATIVE_PATH=/kc \
     KC_HTTP_MANAGEMENT_RELATIVE_PATH=/kc \
+    KC_SPI_X509CERT_LOOKUP_PROVIDER=rfc9440 \
     KC_FEATURES=opentelemetry-logs,opentelemetry-metrics
 
 # build optimized keycloak

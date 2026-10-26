@@ -25,10 +25,11 @@
     doMakeUserConfirmPassword,
   }: UpdateEmailProps = $props();
 
-  const resolveKcClsx = () => getKcClsx({
-    doUseDefaultCss,
-    classes,
-  });
+  const resolveKcClsx = () =>
+    getKcClsx({
+      doUseDefaultCss,
+      classes,
+    });
   const { kcClsx } = resolveKcClsx();
 
   const { msg, msgStr } = $i18n;
@@ -70,7 +71,7 @@
     <div class="space-y-2">
       <Label
         for="logout-sessions"
-        class="inline-flex! items-center! gap-2! w-fit cursor-pointer text-sm font-normal text-muted-foreground whitespace-nowrap"
+        class="inline-flex! w-fit cursor-pointer items-center! gap-2! text-sm font-normal whitespace-nowrap text-muted-foreground"
       >
         <input
           type="hidden"
@@ -87,8 +88,15 @@
       </Label>
     </div>
 
-    <div id="kc-form-buttons" class={isAppInitiatedAction ? 'grid gap-2 sm:grid-cols-2' : ''}>
-      <Button disabled={!$isFormSubmittable} type="submit" class="w-full">
+    <div
+      id="kc-form-buttons"
+      class={isAppInitiatedAction ? 'grid gap-2 sm:grid-cols-2' : ''}
+    >
+      <Button
+        disabled={!$isFormSubmittable}
+        type="submit"
+        class="w-full"
+      >
         {msgStr('doSubmit')}
       </Button>
       {#if isAppInitiatedAction}
@@ -102,6 +110,6 @@
           {@render msg('doCancel')()}
         </Button>
       {/if}
-      </div>
+    </div>
   </form>
 </Template>

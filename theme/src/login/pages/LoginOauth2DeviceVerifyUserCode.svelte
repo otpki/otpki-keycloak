@@ -36,10 +36,9 @@
   >
     <div class="space-y-2">
       <Label for="device-user-code">
-          {@render msg('verifyOAuth2DeviceUserCode')()}
+        {@render msg('verifyOAuth2DeviceUserCode')()}
       </Label>
 
-      <!-- svelte-ignore a11y_autofocus -->
       <Input
         id="device-user-code"
         name="device_user_code"

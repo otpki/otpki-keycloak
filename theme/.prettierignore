@@ -1,0 +1,10 @@
+# Generated / vendored output
+dist
+dist_keycloak
+storybook-static
+public/keycloak-theme
+
+# Keycloakify-managed React extension sources (see src/.gitignore)
+src/admin
+src/account
+src/shared

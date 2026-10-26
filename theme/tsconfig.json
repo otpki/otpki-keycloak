@@ -13,9 +13,10 @@
      */
     "allowJs": true,
     "checkJs": true,
+    "jsx": "react-jsx",
+    "verbatimModuleSyntax": false,
     "isolatedModules": true,
     "moduleDetection": "force",
-    "baseUrl": ".",
     "paths": {
       "$lib": ["./src/lib"],
       "$lib/*": ["./src/lib/*"]

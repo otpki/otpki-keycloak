@@ -52,16 +52,15 @@
   >
     <div class="space-y-2">
       <Label for="username">
-          {#if !realm.loginWithEmailAllowed}
-            {@render msg('username')()}
-          {:else if !realm.registrationEmailAsUsername}
-            {@render msg('usernameOrEmail')()}
-          {:else}
-            {@render msg('email')()}
-          {/if}
+        {#if !realm.loginWithEmailAllowed}
+          {@render msg('username')()}
+        {:else if !realm.registrationEmailAsUsername}
+          {@render msg('usernameOrEmail')()}
+        {:else}
+          {@render msg('email')()}
+        {/if}
       </Label>
 
-      <!-- svelte-ignore a11y_autofocus -->
       <Input
         type="text"
         id="username"
@@ -82,11 +81,18 @@
     </div>
 
     <div class="flex flex-col-reverse gap-2 sm:flex-row sm:items-center sm:justify-between">
-      <Button href={url.loginUrl} variant="link" class="h-auto px-0 py-0 text-sm justify-start">
+      <Button
+        href={url.loginUrl}
+        variant="link"
+        class="h-auto justify-start px-0 py-0 text-sm"
+      >
         {@render msg('backToLogin')()}
       </Button>
 
-      <Button type="submit" class="w-full sm:w-auto">
+      <Button
+        type="submit"
+        class="w-full sm:w-auto"
+      >
         {msgStr('doSubmit')}
       </Button>
     </div>

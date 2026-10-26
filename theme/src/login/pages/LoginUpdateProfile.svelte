@@ -23,10 +23,11 @@
     doMakeUserConfirmPassword,
   }: LoginUpdateProfileProps = $props();
 
-  const resolveKcClsx = () => getKcClsx({
-    doUseDefaultCss,
-    classes,
-  });
+  const resolveKcClsx = () =>
+    getKcClsx({
+      doUseDefaultCss,
+      classes,
+    });
   const { kcClsx } = resolveKcClsx();
 
   const messagesPerField = $derived(kcContext.messagesPerField);
@@ -65,8 +66,15 @@
     />
 
     <div class={kcClsx('kcFormGroupClass')}>
-      <div id="kc-form-buttons" class={isAppInitiatedAction ? 'grid gap-2 sm:grid-cols-2' : ''}>
-        <Button disabled={!$isFormSubmittable} type="submit" class="w-full">
+      <div
+        id="kc-form-buttons"
+        class={isAppInitiatedAction ? 'grid gap-2 sm:grid-cols-2' : ''}
+      >
+        <Button
+          disabled={!$isFormSubmittable}
+          type="submit"
+          class="w-full"
+        >
           {msgStr('doSubmit')}
         </Button>
         {#if isAppInitiatedAction}

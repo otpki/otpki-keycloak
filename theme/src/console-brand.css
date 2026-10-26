@@ -1,0 +1,1173 @@
+/*
+ * OTPKI design system applied to the Keycloakify React extensions
+ * (Single-Page account console + admin console).
+ *
+ * Imported by admin/index.css and account/index.css.
+ *
+ * How this file is organized:
+ *
+ * 1. `--otpki-*` semantic tokens, defined per color scheme. All component
+ *    overrides reference these vars so each rule is written once and
+ *    resolves correctly in both light and dark mode.
+ *
+ * 2. PatternFly v5 global + component variable overrides, mapped onto the
+ *    OTPKI tokens.
+ *
+ *    IMPORTANT: PatternFly declares its light theme at `:where(:root)` and
+ *    its dark theme at `:where(.pf-v5-theme-dark)` — both ZERO specificity.
+ *    Light-mode overrides MUST be scoped under `:root:not(.pf-v5-theme-dark)`
+ *    or they silently win over the dark theme and produce light-mode
+ *    components with dark-mode text.
+ *
+ * 3. Component-level rules that make PatternFly read like the shadcn/OTPKI
+ *    design language (radii, borders, focus rings, light sidebar + masthead,
+ *    compact tables and menus).
+ */
+
+/* relative urls — Vite emits the woff2 files as bundle assets so they
+   resolve under Keycloak's /resources/<theme>/ prefix in production */
+@font-face {
+  font-family: 'Geist';
+  src: url('./fonts/Geist-variableweight.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist';
+  src: url('./fonts/Geist-Italic-variableweight.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('./fonts/GeistMono-variableweight.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('./fonts/GeistMono-Italic-variableweight.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ------------------------------------------------------------------ */
+/* 1. Theme-independent tokens (fonts, radius scale)                   */
+/* ------------------------------------------------------------------ */
+
+:root {
+  --pf-v5-global--FontFamily--sans-serif:
+    'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --pf-v5-global--FontFamily--heading--sans-serif: var(--pf-v5-global--FontFamily--sans-serif);
+  --pf-v5-global--FontFamily--monospace: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --otpki-font-sans: var(--pf-v5-global--FontFamily--sans-serif);
+  --otpki-font-mono: var(--pf-v5-global--FontFamily--monospace);
+
+  --pf-v5-global--BorderRadius--sm: 0.375rem;
+  --pf-v5-global--BorderRadius--lg: 0.625rem;
+  --otpki-radius-sm: 0.375rem;
+  --otpki-radius-md: 0.5rem;
+  --otpki-radius-lg: 0.625rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* 2. Semantic OTPKI tokens + PatternFly globals — LIGHT               */
+/* ------------------------------------------------------------------ */
+
+:root:not(.pf-v5-theme-dark) {
+  color-scheme: light;
+
+  /* semantic tokens (values mirror src/app.css + ui/otpki app.css) */
+  --otpki-background: oklch(1 0 0);
+  --otpki-foreground: oklch(0.129 0.042 264.695);
+  --otpki-card: oklch(1 0 0);
+  --otpki-card-foreground: oklch(0.129 0.042 264.695);
+  --otpki-popover: oklch(1 0 0);
+  --otpki-popover-foreground: oklch(0.129 0.042 264.695);
+  --otpki-primary: oklch(0.208 0.042 265.755);
+  --otpki-primary-hover: oklch(0.165 0.038 265.755);
+  --otpki-primary-foreground: oklch(0.984 0.003 247.858);
+  --otpki-secondary: oklch(0.968 0.007 247.896);
+  --otpki-secondary-foreground: oklch(0.208 0.042 265.755);
+  --otpki-muted: oklch(0.968 0.007 247.896);
+  --otpki-muted-foreground: oklch(0.554 0.046 257.417);
+  --otpki-accent: oklch(0.968 0.007 247.896);
+  --otpki-accent-foreground: oklch(0.208 0.042 265.755);
+  --otpki-destructive: oklch(0.577 0.245 27.325);
+  --otpki-destructive-hover: oklch(0.5 0.215 27.325);
+  --otpki-destructive-foreground: oklch(0.984 0.003 247.858);
+  --otpki-success: oklch(0.627 0.17 149.2);
+  --otpki-warning: oklch(0.681 0.162 75.83);
+  --otpki-info: oklch(0.588 0.158 241.97);
+  --otpki-border: oklch(0.929 0.013 255.508);
+  --otpki-input: oklch(0.929 0.013 255.508);
+  --otpki-input-bg: oklch(1 0 0);
+  --otpki-ring: oklch(0.704 0.04 256.788);
+  --otpki-link: #0073cf;
+  --otpki-link-hover: #005fa8;
+  --otpki-disabled: oklch(0.708 0.022 261.325);
+  --otpki-disabled-bg: oklch(0.872 0.01 258.338 / 0.5);
+
+  --otpki-sidebar: oklch(0.984 0.003 247.858);
+  --otpki-sidebar-foreground: oklch(0.129 0.042 264.695);
+  --otpki-sidebar-accent: oklch(0.968 0.007 247.896);
+  --otpki-sidebar-accent-foreground: oklch(0.208 0.042 265.755);
+  --otpki-sidebar-border: oklch(0.929 0.013 255.508);
+  --otpki-sidebar-active: #0073cf;
+  --otpki-sidebar-muted: oklch(0.554 0.046 257.417);
+
+  --otpki-shadow-sm: 0 1px 2px 0 oklch(0.129 0.042 264.695 / 0.05);
+  --otpki-shadow-md: 0 1px 3px 0 oklch(0.129 0.042 264.695 / 0.1), 0 1px 2px -1px oklch(0.129 0.042 264.695 / 0.1);
+  --otpki-shadow-lg: 0 4px 6px -1px oklch(0.129 0.042 264.695 / 0.1), 0 2px 4px -2px oklch(0.129 0.042 264.695 / 0.1);
+  --otpki-ring-shadow: 0 0 0 2px var(--otpki-background), 0 0 0 4px var(--otpki-ring);
+
+  /* PatternFly global mapping */
+  --pf-v5-global--primary-color--100: var(--otpki-primary);
+  --pf-v5-global--primary-color--200: var(--otpki-primary-hover);
+  --pf-v5-global--secondary-color--100: var(--otpki-muted-foreground);
+  --pf-v5-global--active-color--100: var(--otpki-link);
+  --pf-v5-global--link--Color: var(--otpki-link);
+  --pf-v5-global--link--Color--hover: var(--otpki-link-hover);
+  --pf-v5-global--link--Color--visited: var(--otpki-link);
+  --pf-v5-global--focus-color--100: var(--otpki-ring);
+
+  --pf-v5-global--success-color--100: var(--otpki-success);
+  --pf-v5-global--success-color--200: oklch(0.53 0.15 149.2);
+  --pf-v5-global--info-color--100: var(--otpki-info);
+  --pf-v5-global--info-color--200: oklch(0.5 0.15 241.97);
+  --pf-v5-global--warning-color--100: var(--otpki-warning);
+  --pf-v5-global--warning-color--200: oklch(0.58 0.15 75.83);
+  --pf-v5-global--danger-color--100: var(--otpki-destructive);
+  --pf-v5-global--danger-color--200: var(--otpki-destructive-hover);
+  --pf-v5-global--danger-color--300: oklch(0.4 0.18 27.325);
+
+  --pf-v5-global--Color--100: var(--otpki-foreground);
+  --pf-v5-global--Color--200: var(--otpki-muted-foreground);
+
+  --pf-v5-global--BackgroundColor--100: var(--otpki-background);
+  --pf-v5-global--BackgroundColor--200: var(--otpki-muted);
+  --pf-v5-global--BackgroundColor--150: oklch(0.984 0.003 247.858);
+
+  /* PF "context ramps" — the light-* and dark-* suffixes are SHADES, not schemes.
+     light-* = light shades used on dark surfaces (dark-context containers);
+     dark-* = dark shades used on light surfaces (pf-m-light sections, cards). */
+  --pf-v5-global--Color--light-100: oklch(0.984 0.003 247.858);
+  --pf-v5-global--Color--light-200: oklch(0.871 0.02 255);
+  --pf-v5-global--Color--dark-100: var(--otpki-foreground);
+  --pf-v5-global--Color--dark-200: var(--otpki-muted-foreground);
+  --pf-v5-global--BackgroundColor--light-100: var(--otpki-background);
+  --pf-v5-global--BackgroundColor--light-200: var(--otpki-muted);
+  --pf-v5-global--BackgroundColor--light-300: var(--otpki-secondary);
+  --pf-v5-global--BackgroundColor--dark-100: oklch(0.129 0.042 264.695);
+  --pf-v5-global--BackgroundColor--dark-200: oklch(0.208 0.042 265.755);
+  --pf-v5-global--BackgroundColor--dark-300: oklch(0.269 0.045 265.755);
+  --pf-v5-global--BackgroundColor--dark-400: oklch(0.33 0.045 265.755);
+  --pf-v5-global--BorderColor--dark-100: var(--otpki-border);
+  --pf-v5-global--primary-color--dark-100: var(--otpki-primary);
+  --pf-v5-global--primary-color--light-100: #73bcf7;
+  --pf-v5-global--link--Color--dark: var(--otpki-link);
+  --pf-v5-global--link--Color--dark--hover: var(--otpki-link-hover);
+  --pf-v5-global--link--Color--light: #73bcf7;
+  --pf-v5-global--link--Color--light--hover: #a8d3f5;
+  --pf-v5-global--icon--Color--light: var(--otpki-muted-foreground);
+  --pf-v5-global--icon--Color--dark: var(--otpki-foreground);
+  --pf-v5-global--icon--Color--light--light: oklch(0.871 0.02 255);
+  --pf-v5-global--icon--Color--light--dark: oklch(0.984 0.003 247.858);
+  --pf-v5-global--icon--Color--dark--light: var(--otpki-foreground);
+  --pf-v5-global--icon--Color--dark--dark: oklch(0.984 0.003 247.858);
+
+  --pf-v5-global--BorderColor--100: var(--otpki-border);
+  --pf-v5-global--BorderColor--300: var(--otpki-border);
+  --pf-v5-global--disabled-color--100: var(--otpki-disabled);
+  --pf-v5-global--disabled-color--200: oklch(0.551 0.027 264.364);
+  --pf-v5-global--disabled-color--300: var(--otpki-border);
+
+  --pf-v5-global--BoxShadow--sm: var(--otpki-shadow-sm);
+  --pf-v5-global--BoxShadow--md: var(--otpki-shadow-md);
+  --pf-v5-global--BoxShadow--lg: var(--otpki-shadow-lg);
+  --pf-v5-global--BoxShadow--xl: var(--otpki-shadow-lg);
+}
+
+/* ------------------------------------------------------------------ */
+/* 3. Semantic OTPKI tokens + PatternFly globals — DARK                */
+/* ------------------------------------------------------------------ */
+
+.pf-v5-theme-dark {
+  color-scheme: dark;
+
+  --otpki-background: oklch(0.129 0.042 264.695);
+  --otpki-foreground: oklch(0.984 0.003 247.858);
+  --otpki-card: oklch(0.208 0.042 265.755);
+  --otpki-card-foreground: oklch(0.984 0.003 247.858);
+  --otpki-popover: oklch(0.208 0.042 265.755);
+  --otpki-popover-foreground: oklch(0.984 0.003 247.858);
+  --otpki-primary: oklch(0.929 0.013 255.508);
+  --otpki-primary-hover: oklch(0.87 0.01 250);
+  --otpki-primary-foreground: oklch(0.208 0.042 265.755);
+  --otpki-secondary: oklch(0.279 0.041 260.031);
+  --otpki-secondary-foreground: oklch(0.984 0.003 247.858);
+  --otpki-muted: oklch(0.279 0.041 260.031);
+  --otpki-muted-foreground: oklch(0.704 0.04 256.788);
+  --otpki-accent: oklch(0.279 0.041 260.031);
+  --otpki-accent-foreground: oklch(0.984 0.003 247.858);
+  --otpki-destructive: oklch(0.704 0.191 22.216);
+  --otpki-destructive-hover: oklch(0.75 0.17 22.216);
+  --otpki-destructive-foreground: oklch(0.984 0.003 247.858);
+  --otpki-success: oklch(0.723 0.192 149.58);
+  --otpki-warning: oklch(0.769 0.188 70.08);
+  --otpki-info: oklch(0.685 0.169 237.32);
+  --otpki-border: oklch(1 0 0 / 10%);
+  --otpki-input: oklch(1 0 0 / 15%);
+  --otpki-input-bg: oklch(0.25 0.042 265.755);
+  --otpki-ring: oklch(0.551 0.027 264.364);
+  --otpki-link: #4da3e8;
+  --otpki-link-hover: #7abcef;
+  --otpki-disabled: oklch(0.45 0.03 260);
+  --otpki-disabled-bg: oklch(0.279 0.041 260.031 / 0.5);
+
+  --otpki-sidebar: oklch(0.208 0.042 265.755);
+  --otpki-sidebar-foreground: oklch(0.984 0.003 247.858);
+  --otpki-sidebar-accent: oklch(0.279 0.041 260.031);
+  --otpki-sidebar-accent-foreground: oklch(0.984 0.003 247.858);
+  --otpki-sidebar-border: oklch(1 0 0 / 10%);
+  --otpki-sidebar-active: #4da3e8;
+  --otpki-sidebar-muted: oklch(0.704 0.04 256.788);
+
+  --otpki-shadow-sm: 0 1px 2px 0 oklch(0 0 0 / 0.4);
+  --otpki-shadow-md: 0 1px 3px 0 oklch(0 0 0 / 0.45), 0 1px 2px -1px oklch(0 0 0 / 0.45);
+  --otpki-shadow-lg: 0 4px 6px -1px oklch(0 0 0 / 0.5), 0 2px 4px -2px oklch(0 0 0 / 0.5);
+  --otpki-ring-shadow: 0 0 0 2px var(--otpki-background), 0 0 0 4px var(--otpki-ring);
+
+  --pf-v5-global--primary-color--100: var(--otpki-primary);
+  --pf-v5-global--primary-color--200: var(--otpki-primary-hover);
+  --pf-v5-global--secondary-color--100: var(--otpki-muted-foreground);
+  --pf-v5-global--active-color--100: var(--otpki-link);
+  --pf-v5-global--link--Color: var(--otpki-link);
+  --pf-v5-global--link--Color--hover: var(--otpki-link-hover);
+  --pf-v5-global--link--Color--visited: var(--otpki-link);
+  --pf-v5-global--focus-color--100: var(--otpki-ring);
+
+  --pf-v5-global--success-color--100: var(--otpki-success);
+  --pf-v5-global--success-color--200: oklch(0.79 0.17 149.58);
+  --pf-v5-global--info-color--100: var(--otpki-info);
+  --pf-v5-global--info-color--200: oklch(0.75 0.15 237.32);
+  --pf-v5-global--warning-color--100: var(--otpki-warning);
+  --pf-v5-global--warning-color--200: oklch(0.82 0.16 70.08);
+  --pf-v5-global--danger-color--100: var(--otpki-destructive);
+  --pf-v5-global--danger-color--200: var(--otpki-destructive-hover);
+  --pf-v5-global--danger-color--300: oklch(0.82 0.14 22.216);
+
+  --pf-v5-global--Color--100: var(--otpki-foreground);
+  --pf-v5-global--Color--200: var(--otpki-muted-foreground);
+
+  --pf-v5-global--BackgroundColor--100: var(--otpki-background);
+  --pf-v5-global--BackgroundColor--200: oklch(0.11 0.04 264.695);
+  --pf-v5-global--BackgroundColor--300: var(--otpki-card);
+  --pf-v5-global--BackgroundColor--400: var(--otpki-secondary);
+  --pf-v5-global--BackgroundColor--150: var(--otpki-card);
+
+  /* context ramps — dark theme: pf-m-light sections render as dark surfaces,
+     so BOTH shade ramps resolve to light text + dark backgrounds */
+  --pf-v5-global--Color--light-100: var(--otpki-foreground);
+  --pf-v5-global--Color--light-200: var(--otpki-muted-foreground);
+  --pf-v5-global--Color--dark-100: var(--otpki-foreground);
+  --pf-v5-global--Color--dark-200: var(--otpki-muted-foreground);
+  --pf-v5-global--BackgroundColor--light-100: var(--otpki-background);
+  --pf-v5-global--BackgroundColor--light-200: var(--otpki-card);
+  --pf-v5-global--BackgroundColor--light-300: var(--otpki-secondary);
+  --pf-v5-global--BackgroundColor--dark-100: var(--otpki-background);
+  --pf-v5-global--BackgroundColor--dark-200: oklch(0.11 0.04 264.695);
+  --pf-v5-global--BackgroundColor--dark-300: var(--otpki-card);
+  --pf-v5-global--BackgroundColor--dark-400: var(--otpki-secondary);
+  --pf-v5-global--BorderColor--dark-100: var(--otpki-border);
+  --pf-v5-global--primary-color--dark-100: var(--otpki-primary);
+  --pf-v5-global--primary-color--light-100: var(--otpki-primary);
+  --pf-v5-global--link--Color--dark: var(--otpki-link);
+  --pf-v5-global--link--Color--dark--hover: var(--otpki-link-hover);
+  --pf-v5-global--link--Color--light: var(--otpki-link);
+  --pf-v5-global--link--Color--light--hover: var(--otpki-link-hover);
+  --pf-v5-global--icon--Color--light: var(--otpki-muted-foreground);
+  --pf-v5-global--icon--Color--dark: var(--otpki-foreground);
+  --pf-v5-global--icon--Color--light--light: var(--otpki-muted-foreground);
+  --pf-v5-global--icon--Color--light--dark: var(--otpki-foreground);
+  --pf-v5-global--icon--Color--dark--light: var(--otpki-muted-foreground);
+  --pf-v5-global--icon--Color--dark--dark: var(--otpki-foreground);
+
+  --pf-v5-global--BorderColor--100: var(--otpki-border);
+  --pf-v5-global--BorderColor--200: var(--otpki-border);
+  --pf-v5-global--BorderColor--300: var(--otpki-border);
+  --pf-v5-global--disabled-color--100: var(--otpki-disabled);
+  --pf-v5-global--disabled-color--200: oklch(0.58 0.03 260);
+  --pf-v5-global--disabled-color--300: var(--otpki-border);
+
+  --pf-v5-global--BoxShadow--sm: var(--otpki-shadow-sm);
+  --pf-v5-global--BoxShadow--md: var(--otpki-shadow-md);
+  --pf-v5-global--BoxShadow--lg: var(--otpki-shadow-lg);
+  --pf-v5-global--BoxShadow--xl: var(--otpki-shadow-lg);
+}
+
+/* ================================================================== */
+/* 4. Component-level restyle                                          */
+/* ================================================================== */
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ---------- App shell: page background + sidebar + masthead -------- */
+
+body .pf-v5-c-page {
+  --pf-v5-c-page--BackgroundColor: var(--otpki-background);
+}
+
+body .pf-v5-c-page__main,
+body .pf-v5-c-page__main-section {
+  --pf-v5-c-page__main-section--BackgroundColor: var(--otpki-background);
+}
+
+/* OTPKI puts page content on bordered cards. Every top-level main section
+   after the first (the title/header section) becomes a card — unless it
+   already contains a Card. Direct children of page__main only: nested
+   PageSections (e.g. the credential categories inside account pages)
+   must stay flat inside the card. */
+body
+  .pf-v5-c-page__main
+  > .pf-v5-c-page__main-section.pf-m-light
+  ~ .pf-v5-c-page__main-section.pf-m-light:not(:has(.pf-v5-c-card:not(.pf-m-flat))) {
+  --pf-v5-c-page__main-section--BackgroundColor: var(--otpki-card);
+  --pf-v5-c-page__main-section--m-light--BackgroundColor: var(--otpki-card);
+  margin-inline: var(--pf-v5-global--spacer--lg);
+  margin-block-end: var(--pf-v5-global--spacer--lg);
+  border: 1px solid var(--otpki-border);
+  border-radius: var(--otpki-radius-lg);
+}
+
+/* nested light-variant sections inside a carded/card surface flatten —
+   no own background and no extra padding (the card supplies it). Use the
+   property, NOT the vars: descendants like the fixed action bar resolve
+   --m-light--BackgroundColor and must keep a real color */
+body .pf-v5-c-card .pf-v5-c-page__main-section,
+body .pf-v5-c-page__main-section .pf-v5-c-page__main-section {
+  background-color: transparent;
+  --pf-v5-c-page__main-section--PaddingTop: 0;
+  --pf-v5-c-page__main-section--PaddingBottom: 0;
+  --pf-v5-c-page__main-section--xl--PaddingTop: 0;
+  --pf-v5-c-page__main-section--xl--PaddingBottom: 0;
+}
+
+/* consecutive sections stack with full padding each → collapse the seam */
+body .pf-v5-c-page__main-section + .pf-v5-c-page__main-section {
+  padding-top: 0;
+}
+
+/* tab content paints a light-300 surface rect under the tab list — an
+   unintended "almost card". Let it show the section/card behind it. */
+body .pf-v5-c-tab-content.pf-m-light-300 {
+  --pf-v5-c-tab-content--m-light-300: transparent;
+  background-color: transparent;
+}
+
+/* carded sections around a tab strip use pf-v5-u-p-0 — give the pill
+   group the same inset a card's own padding would have provided */
+body .pf-v5-c-page__main-section > .pf-v5-c-tabs {
+  margin-top: var(--pf-v5-global--spacer--sm);
+}
+
+/* FixedButtonGroup's css-module class — reads the section's m-light var
+   for its bg; pin it to the card surface and stack it above content */
+body .pf-v5-c-form__group.pf-m-action[class*='buttonGroup'] {
+  background-color: var(--otpki-card);
+  z-index: var(--pf-v5-global--ZIndex--lg);
+  box-shadow: 0 -1px 2px rgb(0 0 0 / 0.2);
+}
+
+/* ---------- Page titles (OTPKI heading scale) ---------------------- */
+
+body .pf-v5-c-title {
+  --pf-v5-c-title--FontWeight: 600;
+  letter-spacing: -0.01em;
+}
+
+body .pf-v5-c-title.pf-m-h1,
+body .pf-v5-c-title.pf-m-lg {
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+body .pf-v5-c-title.pf-m-h2 {
+  font-size: 1.375rem;
+  font-weight: 600;
+}
+
+/* ViewHeader renders the page title through TextContent h1 (nested in Level) */
+body .pf-v5-c-content h1,
+body .pf-v5-c-content h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--otpki-foreground);
+}
+
+body .pf-v5-c-content p {
+  color: var(--otpki-muted-foreground);
+}
+
+body .pf-v5-c-page__sidebar {
+  --pf-v5-c-page__sidebar--BackgroundColor: var(--otpki-sidebar);
+  --pf-v5-c-page__sidebar--BoxShadow: none;
+  border-right: 1px solid var(--otpki-sidebar-border);
+}
+
+/* the sidebar is a PF dark-context container (white text). In light mode the
+   sidebar is a light surface — flip it to the light-context ramp so bare text
+   (realm label, context selector) stays readable */
+:root:not(.pf-v5-theme-dark) .pf-v5-c-page__sidebar {
+  --pf-v5-global--Color--100: var(--pf-v5-global--Color--dark-100);
+  --pf-v5-global--Color--200: var(--pf-v5-global--Color--dark-200);
+  --pf-v5-global--BorderColor--100: var(--pf-v5-global--BorderColor--dark-100);
+  --pf-v5-global--primary-color--100: var(--pf-v5-global--primary-color--dark-100);
+  --pf-v5-global--link--Color: var(--pf-v5-global--link--Color--dark);
+  --pf-v5-global--link--Color--hover: var(--pf-v5-global--link--Color--dark--hover);
+  --pf-v5-global--BackgroundColor--100: var(--pf-v5-global--BackgroundColor--light-100);
+}
+
+/* plain links outside components — PF only styles links inside .pf-v5-c-content */
+body a {
+  color: var(--otpki-link);
+}
+
+body a:hover {
+  color: var(--otpki-link-hover);
+}
+
+/* nav inside the sidebar — reads like the shadcn sidebar menu */
+body .pf-v5-c-page__sidebar .pf-v5-c-nav {
+  --pf-v5-c-nav__link--Color: var(--otpki-sidebar-foreground);
+  --pf-v5-c-nav__link--FontSize: 0.875rem;
+  --pf-v5-c-nav__link--FontWeight: 400;
+  --pf-v5-c-nav__link--hover--Color: var(--otpki-sidebar-foreground);
+  --pf-v5-c-nav__link--focus--Color: var(--otpki-sidebar-foreground);
+  --pf-v5-c-nav__link--active--Color: var(--otpki-sidebar-foreground);
+  --pf-v5-c-nav__link--m-current--Color: var(--otpki-sidebar-accent-foreground);
+  --pf-v5-c-nav__link--hover--BackgroundColor: var(--otpki-sidebar-accent);
+  --pf-v5-c-nav__link--focus--BackgroundColor: var(--otpki-sidebar-accent);
+  --pf-v5-c-nav__link--active--BackgroundColor: var(--otpki-sidebar-accent);
+  --pf-v5-c-nav__link--m-current--BackgroundColor: var(--otpki-sidebar-accent);
+  --pf-v5-c-nav__link--m-current--FontWeight: 500;
+  --pf-v5-c-nav__item--m-current--not--m-expanded__link--BackgroundColor: var(--otpki-sidebar-accent);
+  --pf-v5-c-nav__item--m-current--not--m-expanded__link--Color: var(--otpki-sidebar-accent-foreground);
+  /* no left accent bar — OTPKI uses a rounded accent fill, not a border */
+  --pf-v5-c-nav__link--after--BorderColor: transparent;
+  --pf-v5-c-nav__link--hover--after--BorderColor: transparent;
+  --pf-v5-c-nav__link--focus--after--BorderColor: transparent;
+  --pf-v5-c-nav__link--active--after--BorderColor: transparent;
+  --pf-v5-c-nav__link--m-current--after--BorderColor: transparent;
+  --pf-v5-c-nav__section-title--Color: var(--otpki-sidebar-muted);
+  --pf-v5-c-nav__section-title--FontSize: 0.75rem;
+  /* OTPKI nav has no hairline separators between items/sections */
+  --pf-v5-c-nav__item--before--BorderColor: transparent;
+  --pf-v5-c-nav__link--before--BorderColor: transparent;
+  --pf-v5-c-nav__link--before--BorderBottomWidth: 0;
+  --pf-v5-c-nav--c-divider--BackgroundColor: transparent;
+}
+
+body .pf-v5-c-page__sidebar .pf-v5-c-nav__link {
+  border-radius: var(--otpki-radius-sm);
+}
+
+body .pf-v5-c-nav__link {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.otpki-nav-icon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  color: var(--otpki-sidebar-muted);
+}
+
+body .pf-v5-c-nav__link:hover .otpki-nav-icon,
+body .pf-v5-c-nav__link:focus .otpki-nav-icon,
+body .pf-v5-c-nav__link.pf-m-current .otpki-nav-icon,
+body .pf-v5-c-nav__item.pf-m-current .otpki-nav-icon {
+  color: var(--otpki-sidebar-foreground);
+}
+
+.otpki-nav__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+body .pf-v5-c-page__sidebar .pf-v5-c-nav__section-title {
+  font-weight: 500;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* masthead — sits above content at content tone; brand cell takes the
+   sidebar tone so the left column reads as one continuous rail (OTPKI) */
+
+:root:not(.pf-v5-theme-dark) .pf-v5-c-masthead {
+  /* undo PatternFly's built-in "dark context" for the masthead */
+  --pf-v5-global--Color--100: var(--otpki-foreground);
+  --pf-v5-global--Color--200: var(--otpki-muted-foreground);
+  --pf-v5-global--BorderColor--100: var(--otpki-border);
+  --pf-v5-global--primary-color--100: var(--otpki-primary);
+  --pf-v5-global--link--Color: var(--otpki-link);
+  --pf-v5-global--link--Color--hover: var(--otpki-link-hover);
+  --pf-v5-global--BackgroundColor--100: var(--otpki-background);
+  --pf-v5-global--icon--Color--light: var(--otpki-muted-foreground);
+  --pf-v5-global--icon--Color--dark: var(--otpki-foreground);
+  --pf-v5-c-masthead--BackgroundColor: var(--otpki-background);
+  --pf-v5-c-masthead--c-toolbar--BackgroundColor: var(--otpki-background);
+  --pf-v5-c-button--m-primary--BackgroundColor: var(--otpki-primary);
+  color: var(--otpki-foreground);
+  border-bottom: 1px solid var(--otpki-border);
+}
+
+/* PF applies its dark-context flip to plain buttons inside the masthead
+   at element level — needs its own override so icon buttons are visible */
+:root:not(.pf-v5-theme-dark) .pf-v5-c-masthead .pf-v5-c-button.pf-m-plain {
+  --pf-v5-global--Color--100: var(--otpki-foreground);
+  --pf-v5-global--Color--200: var(--otpki-muted-foreground);
+}
+
+.pf-v5-theme-dark .pf-v5-c-masthead {
+  --pf-v5-c-masthead--BackgroundColor: var(--otpki-background);
+  --pf-v5-c-masthead--c-toolbar--BackgroundColor: var(--otpki-background);
+  color: var(--otpki-foreground);
+  border-bottom: 1px solid var(--otpki-border);
+}
+
+/* brand/toggle cell = sidebar tone AND sidebar width → continuous left rail.
+   Only fixed-width at xl+, where the sidebar actually occupies the column —
+   below that it collapses to an overlay and the cell should size to content */
+body .pf-v5-c-masthead__main {
+  flex-shrink: 0;
+  background-color: var(--otpki-sidebar);
+  border-right: 1px solid var(--otpki-sidebar-border);
+}
+
+@media (min-width: 1200px) {
+  body .pf-v5-c-masthead__main {
+    width: var(--pf-v5-c-page__sidebar--Width);
+  }
+}
+
+/* page__header wrapper (older keycloak-ui layouts) — PF dark theme paints it black */
+body .pf-v5-c-page__header {
+  --pf-v5-c-page__header--BackgroundColor: var(--otpki-background);
+  color: var(--otpki-foreground);
+  border-bottom: 1px solid var(--otpki-border);
+}
+
+/* ---------- Buttons ------------------------------------------------ */
+
+body .pf-v5-c-button {
+  --pf-v5-c-button--BorderRadius: var(--otpki-radius-md);
+  --pf-v5-c-button--after--BorderRadius: var(--otpki-radius-md);
+  --pf-v5-c-button--FontSize: 0.875rem;
+  --pf-v5-c-button--FontWeight: 500;
+  --pf-v5-c-button--PaddingTop: 0.5rem;
+  --pf-v5-c-button--PaddingBottom: 0.5rem;
+  --pf-v5-c-button--PaddingLeft: 1rem;
+  --pf-v5-c-button--PaddingRight: 1rem;
+
+  /* primary → shadcn default */
+  --pf-v5-c-button--m-primary--BackgroundColor: var(--otpki-primary);
+  --pf-v5-c-button--m-primary--Color: var(--otpki-primary-foreground);
+  --pf-v5-c-button--m-primary--hover--BackgroundColor: var(--otpki-primary-hover);
+  --pf-v5-c-button--m-primary--hover--Color: var(--otpki-primary-foreground);
+  --pf-v5-c-button--m-primary--focus--BackgroundColor: var(--otpki-primary-hover);
+  --pf-v5-c-button--m-primary--focus--Color: var(--otpki-primary-foreground);
+  --pf-v5-c-button--m-primary--active--BackgroundColor: var(--otpki-primary-hover);
+  --pf-v5-c-button--m-primary--active--Color: var(--otpki-primary-foreground);
+
+  /* secondary → shadcn outline */
+  --pf-v5-c-button--m-secondary--BackgroundColor: var(--otpki-card);
+  --pf-v5-c-button--m-secondary--Color: var(--otpki-foreground);
+  --pf-v5-c-button--m-secondary--BorderColor: var(--otpki-input);
+  --pf-v5-c-button--m-secondary--hover--BackgroundColor: var(--otpki-accent);
+  --pf-v5-c-button--m-secondary--hover--Color: var(--otpki-accent-foreground);
+  --pf-v5-c-button--m-secondary--focus--BackgroundColor: var(--otpki-accent);
+  --pf-v5-c-button--m-secondary--active--BackgroundColor: var(--otpki-accent);
+
+  /* plain → shadcn ghost */
+  --pf-v5-c-button--m-plain--Color: var(--otpki-muted-foreground);
+  --pf-v5-c-button--m-plain--hover--Color: var(--otpki-foreground);
+  --pf-v5-c-button--m-plain--hover--BackgroundColor: var(--otpki-accent);
+  --pf-v5-c-button--m-plain--focus--Color: var(--otpki-foreground);
+  --pf-v5-c-button--m-plain--active--Color: var(--otpki-foreground);
+  --pf-v5-c-button--m-plain--active--BackgroundColor: var(--otpki-accent);
+
+  /* link → brand blue */
+  --pf-v5-c-button--m-link--Color: var(--otpki-link);
+  --pf-v5-c-button--m-link--hover--Color: var(--otpki-link-hover);
+  --pf-v5-c-button--m-link--focus--Color: var(--otpki-link-hover);
+  --pf-v5-c-button--m-link--active--Color: var(--otpki-link-hover);
+  --pf-v5-c-button--m-link--m-danger--Color: var(--otpki-destructive);
+  --pf-v5-c-button--m-link--m-danger--hover--Color: var(--otpki-destructive-hover);
+
+  /* danger → destructive */
+  --pf-v5-c-button--m-danger--BackgroundColor: var(--otpki-destructive);
+  --pf-v5-c-button--m-danger--Color: var(--otpki-destructive-foreground);
+  --pf-v5-c-button--m-danger--hover--BackgroundColor: var(--otpki-destructive-hover);
+  --pf-v5-c-button--m-danger--hover--Color: var(--otpki-destructive-foreground);
+  --pf-v5-c-button--m-danger--focus--BackgroundColor: var(--otpki-destructive-hover);
+  --pf-v5-c-button--m-danger--active--BackgroundColor: var(--otpki-destructive-hover);
+
+  --pf-v5-c-button--disabled--BackgroundColor: var(--otpki-disabled-bg);
+  --pf-v5-c-button--disabled--Color: var(--otpki-disabled);
+  --pf-v5-c-button--disabled--after--BorderColor: transparent;
+}
+
+body .pf-v5-c-button.pf-m-secondary {
+  border: 1px solid var(--otpki-input);
+}
+
+/* ---------- Form controls ------------------------------------------ */
+
+body .pf-v5-c-form-control {
+  --pf-v5-c-form-control--before--BorderTopColor: var(--otpki-input);
+  --pf-v5-c-form-control--before--BorderRightColor: var(--otpki-input);
+  --pf-v5-c-form-control--before--BorderBottomColor: var(--otpki-input);
+  --pf-v5-c-form-control--before--BorderLeftColor: var(--otpki-input);
+  /* PF leaves the ::before bottom edge to the ::after accent underline —
+   with the underline removed we must draw the bottom border ourselves */
+  --pf-v5-c-form-control--before--BorderBottomWidth: var(--pf-v5-global--BorderWidth--sm);
+  --pf-v5-c-form-control--after--BorderBottomColor: transparent;
+  --pf-v5-c-form-control--after--BorderBottomWidth: 0;
+  --pf-v5-c-form-control--hover--after--BorderBottomColor: transparent;
+  --pf-v5-c-form-control--focus--after--BorderBottomColor: transparent;
+  --pf-v5-c-form-control--focus--after--BorderBottomWidth: 0;
+  --pf-v5-c-form-control--BackgroundColor: var(--otpki-input-bg);
+  --pf-v5-c-form-control--Color: var(--otpki-foreground);
+  --pf-v5-c-form-control--m-disabled--BackgroundColor: var(--otpki-disabled-bg);
+  --pf-v5-c-form-control--m-disabled--Color: var(--otpki-disabled);
+  border-radius: var(--otpki-radius-md);
+}
+
+/* OTPKI forms stack labels above controls — collapse PatternFly's horizontal
+   label-column grid at the same md breakpoint where PF applies it */
+@media (min-width: 768px) {
+  body .pf-v5-c-form.pf-m-horizontal .pf-v5-c-form__group {
+    grid-template-columns: 1fr;
+    row-gap: var(--pf-v5-global--spacer--xs);
+  }
+
+  body .pf-v5-c-form.pf-m-horizontal .pf-v5-c-form__group-label,
+  body .pf-v5-c-form.pf-m-horizontal .pf-v5-c-form__group-control {
+    grid-column: 1;
+  }
+
+  body .pf-v5-c-form.pf-m-horizontal .pf-v5-c-form__group-label {
+    padding-block-start: 0;
+    transform: none;
+  }
+
+  body .pf-v5-c-form.pf-m-horizontal .pf-v5-c-form__label {
+    text-align: start;
+  }
+
+  /* field-group headers/bodies were placed in the control column */
+  body .pf-v5-c-form.pf-m-horizontal .pf-v5-c-form__field-group-header,
+  body .pf-v5-c-form.pf-m-horizontal .pf-v5-c-form__field-group-body,
+  body .pf-v5-c-form.pf-m-horizontal .pf-v5-c-form__field-group-toggle--field-group-body {
+    grid-column: 1 / -1;
+  }
+}
+
+/* label weight/size + helper text — shadcn-style */
+body .pf-v5-c-form__label-text {
+  --pf-v5-c-form__label-text--FontWeight: 500;
+}
+
+body .pf-v5-c-form__section-title {
+  --pf-v5-c-form__section-title--FontWeight: 600;
+  --pf-v5-c-form__section-title--FontSize: 1rem;
+  color: var(--otpki-foreground);
+}
+
+body .pf-v5-c-form__helper-text,
+body .pf-v5-c-helper-text__item-text {
+  --pf-v5-c-form__helper-text--Color: var(--otpki-muted-foreground);
+  color: var(--otpki-muted-foreground);
+}
+
+body .pf-v5-c-helper-text__item.pf-m-error .pf-v5-c-helper-text__item-text {
+  color: var(--otpki-destructive);
+}
+
+/* OTPKI shows a "Required" pill instead of a bare red asterisk */
+body .pf-v5-c-form__label-required {
+  font-size: 0;
+  margin-inline-start: var(--pf-v5-global--spacer--sm);
+  vertical-align: middle;
+}
+
+body .pf-v5-c-form__label-required::after {
+  content: 'Required';
+  display: inline-block;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--otpki-muted-foreground);
+  background: var(--otpki-muted);
+  border: 1px solid var(--otpki-border);
+  border-radius: 9999px;
+  padding: 0.25rem 0.5rem;
+}
+
+/* expandable section toggles read as links */
+body .pf-v5-c-expandable-section__toggle {
+  color: var(--otpki-link);
+}
+
+body .pf-v5-c-expandable-section__toggle:hover,
+body .pf-v5-c-expandable-section__toggle:active {
+  color: var(--otpki-link-hover);
+}
+
+/* menu toggles (Select dropdowns) share the input look */
+body .pf-v5-c-menu-toggle:not(.pf-m-plain):not(.pf-m-text) {
+  --pf-v5-c-menu-toggle--BackgroundColor: var(--otpki-input-bg);
+  --pf-v5-c-menu-toggle--before--BorderTopColor: var(--otpki-input);
+  --pf-v5-c-menu-toggle--before--BorderRightColor: var(--otpki-input);
+  --pf-v5-c-menu-toggle--before--BorderBottomColor: var(--otpki-input);
+  --pf-v5-c-menu-toggle--before--BorderLeftColor: var(--otpki-input);
+  --pf-v5-c-menu-toggle--before--BorderBottomWidth: var(--pf-v5-global--BorderWidth--sm);
+  --pf-v5-c-menu-toggle--after--BorderBottomColor: transparent;
+  --pf-v5-c-menu-toggle--after--BorderBottomWidth: 0;
+  --pf-v5-c-menu-toggle--Color: var(--otpki-foreground);
+  border-radius: var(--otpki-radius-md);
+}
+
+/* toolbars are transparent — the black-1000 dark-theme fill has no place
+   in OTPKI (masthead toolbar and table toolbars sit on card/page surfaces).
+   The masthead-scoped selector is required to out-specify PF's dark rule. */
+body .pf-v5-c-toolbar,
+body .pf-v5-c-masthead .pf-v5-c-toolbar {
+  --pf-v5-c-toolbar--BackgroundColor: transparent;
+}
+
+/* inside the masthead, toggles are ghost controls (user menu, context selector).
+   The :not()s are needed to out-specify the bordered input rule above. */
+body .pf-v5-c-masthead .pf-v5-c-menu-toggle:not(.pf-m-plain):not(.pf-m-text) {
+  --pf-v5-c-menu-toggle--BackgroundColor: transparent;
+  --pf-v5-c-menu-toggle--before--BorderTopColor: transparent;
+  --pf-v5-c-menu-toggle--before--BorderRightColor: transparent;
+  --pf-v5-c-menu-toggle--before--BorderBottomColor: transparent;
+  --pf-v5-c-menu-toggle--before--BorderLeftColor: transparent;
+  --pf-v5-c-menu-toggle--after--BorderBottomColor: transparent;
+  --pf-v5-c-menu-toggle--after--BorderBottomWidth: 0;
+  --pf-v5-c-menu-toggle--Color: var(--otpki-foreground);
+  border-radius: var(--otpki-radius-md);
+}
+
+body .pf-v5-c-masthead .pf-v5-c-menu-toggle:not(.pf-m-plain):not(.pf-m-text):hover {
+  --pf-v5-c-menu-toggle--BackgroundColor: var(--otpki-accent);
+}
+
+/* PF draws input/toggle borders on ::before pseudos without a radius —
+   that produced square outlines on rounded backgrounds */
+body .pf-v5-c-form-control::before,
+body .pf-v5-c-menu-toggle::before,
+body .pf-v5-c-text-input-group__text::before {
+  border-radius: var(--otpki-radius-md);
+}
+
+/* input groups (clipboard copy, minus/add row buttons) + the search
+   text-input-group share the input surface */
+body .pf-v5-c-input-group {
+  --pf-v5-c-input-group__item--BorderColor--base: var(--otpki-input);
+  --pf-v5-c-input-group__item--BorderColor--accent: var(--otpki-input);
+  --pf-v5-c-input-group__item--BorderLeftColor: var(--otpki-input);
+  --pf-v5-c-input-group__item--m-box--BackgroundColor: var(--otpki-input-bg);
+  --pf-v5-c-input-group__item--m-box--BorderTopColor: var(--otpki-input);
+  --pf-v5-c-input-group__item--m-box--BorderRightColor: var(--otpki-input);
+  --pf-v5-c-input-group__item--m-box--BorderBottomColor: var(--otpki-input);
+  --pf-v5-c-input-group__item--m-box--BorderLeftColor: var(--otpki-input);
+  border-radius: var(--otpki-radius-md);
+}
+
+/* a boxed item (copy button etc.) attached to a field shares the field's
+   outer rounding so the group reads as one control, not a square appendage */
+body .pf-v5-c-input-group > .pf-v5-c-form-control:has(+ .pf-v5-c-input-group__item)::before {
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+}
+
+body .pf-v5-c-input-group__item.pf-m-box:first-child {
+  border-start-start-radius: var(--otpki-radius-md);
+  border-end-start-radius: var(--otpki-radius-md);
+}
+
+body .pf-v5-c-input-group__item.pf-m-box:last-child {
+  border-start-end-radius: var(--otpki-radius-md);
+  border-end-end-radius: var(--otpki-radius-md);
+}
+
+body .pf-v5-c-text-input-group {
+  --pf-v5-c-text-input-group--BackgroundColor: var(--otpki-input-bg);
+  --pf-v5-c-text-input-group__text--before--BorderColor: var(--otpki-input);
+  --pf-v5-c-text-input-group__text--after--BorderBottomColor: transparent;
+  --pf-v5-c-text-input-group--hover__text--after--BorderBottomColor: transparent;
+  --pf-v5-c-text-input-group__text--focus-within--after--BorderBottomColor: var(--otpki-ring);
+  --pf-v5-c-text-input-group__icon--Color: var(--otpki-muted-foreground);
+  border-radius: var(--otpki-radius-md);
+}
+
+/* control buttons (icon buttons bolted onto inputs / inside groups) share
+   the field surface — no stray underline */
+body .pf-v5-c-button.pf-m-control {
+  --pf-v5-c-button--BackgroundColor: var(--otpki-input-bg);
+  --pf-v5-c-button--m-control--BackgroundColor: var(--otpki-input-bg);
+  --pf-v5-c-button--m-control--hover--BackgroundColor: var(--otpki-accent);
+  --pf-v5-c-button--m-control--active--BackgroundColor: var(--otpki-accent);
+  --pf-v5-c-button--m-control--focus--BackgroundColor: var(--otpki-input-bg);
+  --pf-v5-c-button--m-control--after--BorderBottomColor: transparent;
+  --pf-v5-c-button--m-control--hover--after--BorderBottomColor: transparent;
+  --pf-v5-c-button--m-control--focus--after--BorderBottomColor: transparent;
+  --pf-v5-c-button--m-control--active--after--BorderBottomColor: transparent;
+  border-radius: 0;
+}
+
+body .pf-v5-c-form-control:focus-within {
+  box-shadow: var(--otpki-ring-shadow);
+}
+
+body .pf-v5-c-form-control:hover {
+  --pf-v5-c-form-control--before--BorderTopColor: var(--otpki-muted-foreground);
+  --pf-v5-c-form-control--before--BorderRightColor: var(--otpki-muted-foreground);
+  --pf-v5-c-form-control--before--BorderBottomColor: var(--otpki-muted-foreground);
+  --pf-v5-c-form-control--before--BorderLeftColor: var(--otpki-muted-foreground);
+}
+
+/* ---------- Cards -------------------------------------------------- */
+
+body .pf-v5-c-card {
+  --pf-v5-c-card--BackgroundColor: var(--otpki-card);
+  --pf-v5-c-card--BorderColor: var(--otpki-border);
+  --pf-v5-c-card--BoxShadow: var(--otpki-shadow-sm);
+  --pf-v5-c-card--m-rounded--BorderRadius: var(--otpki-radius-lg);
+  border-radius: var(--otpki-radius-lg);
+  border: 1px solid var(--otpki-border);
+}
+
+/* Keycloak's FormPanel renders sections as `Card isFlat` — keycloak's own
+   css strips the border only for a hardcoded kc-* class list, so any missed
+   section shows a stray bordered box around its title. Flat cards inside
+   content sections are invisible wrappers in the OTPKI design. */
+body .pf-v5-c-page__main-section .pf-v5-c-card.pf-m-flat {
+  --pf-v5-c-card--m-flat--BorderWidth: 0;
+  --pf-v5-c-card--m-flat--BorderColor: transparent;
+  --pf-v5-c-card--BackgroundColor: transparent;
+  --pf-v5-c-card--BoxShadow: none;
+  --pf-v5-c-card--first-child--PaddingTop: 0;
+  --pf-v5-c-card--child--PaddingTop: 0;
+  --pf-v5-c-card--child--PaddingRight: 0;
+  --pf-v5-c-card--child--PaddingBottom: 0;
+  --pf-v5-c-card--child--PaddingLeft: 0;
+  --pf-v5-c-card__title--not--last-child--PaddingBottom: var(--pf-v5-global--spacer--md);
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background-color: transparent;
+  padding: 0;
+}
+
+body .pf-v5-c-card.pf-m-flat > .pf-v5-c-card__header,
+body .pf-v5-c-card.pf-m-flat > .pf-v5-c-card__title,
+body .pf-v5-c-card.pf-m-flat > .pf-v5-c-card__body {
+  border: 0;
+  box-shadow: none;
+  background-color: transparent;
+}
+
+/* ---------- Tables / data lists ------------------------------------ */
+
+body .pf-v5-c-table {
+  --pf-v5-c-table--BackgroundColor: transparent;
+  --pf-v5-c-table--BorderColor: var(--otpki-border);
+  --pf-v5-c-table__thead--cell--FontSize: 0.8125rem;
+  --pf-v5-c-table__thead--cell--FontWeight: 500;
+  --pf-v5-c-table__tr--m-clickable--hover--BackgroundColor: var(--otpki-accent);
+  --pf-v5-c-table__tbody--m-clickable--hover--BackgroundColor: var(--otpki-accent);
+}
+
+body .pf-v5-c-table__thead .pf-v5-c-table__th,
+body .pf-v5-c-table__thead .pf-v5-c-table__th .pf-v5-c-table__button {
+  color: var(--otpki-muted-foreground);
+  font-weight: 500;
+}
+
+body .pf-v5-c-table__thead,
+body .pf-v5-c-table__tbody > .pf-v5-c-table__tr {
+  border-bottom: 1px solid var(--otpki-border);
+}
+
+/* ---------- Tabs --------------------------------------------------- */
+
+body .pf-v5-c-tabs {
+  --pf-v5-c-tabs--before--BorderColor: var(--otpki-border);
+  --pf-v5-c-tabs__link--Color: var(--otpki-muted-foreground);
+  --pf-v5-c-tabs__link--hover--Color: var(--otpki-foreground);
+  --pf-v5-c-tabs__link--focus--Color: var(--otpki-foreground);
+  --pf-v5-c-tabs__link--active--Color: var(--otpki-foreground);
+  --pf-v5-c-tabs__item--m-current__link--Color: var(--otpki-foreground);
+  --pf-v5-c-tabs__link--after--BorderColor: var(--otpki-foreground);
+  --pf-v5-c-tabs__link--FontWeight: 500;
+  /* OTPKI uses underline tabs — flatten PF's boxed variant */
+  --pf-v5-c-tabs--m-box__link--BackgroundColor: transparent;
+  --pf-v5-c-tabs__item--m-current__link--BackgroundColor: transparent;
+  --pf-v5-c-tabs--m-box__item--m-current--first-child__link--before--BorderLeftWidth: 0;
+  --pf-v5-c-tabs--m-box__item--m-current--last-child__link--before--BorderRightWidth: 0;
+  --pf-v5-c-tabs__scroll-button--BackgroundColor: var(--otpki-card);
+}
+
+/* horizontal tabs render as shadcn Tabs/TabsTrigger — a muted rounded
+   container with the active item as a filled pill (see OTPKI's
+   Certificate Type segmented control) */
+body .pf-v5-c-tabs:not(.pf-m-vertical) {
+  --pf-v5-c-tabs--before--BorderBottomWidth: 0;
+  --pf-v5-c-tabs__link--after--BorderWidth: 0;
+  --pf-v5-c-tabs__link--after--BorderTopWidth: 0;
+  --pf-v5-c-tabs__link--after--BorderBottomWidth: 0;
+  --pf-v5-c-tabs__link--hover--after--BorderWidth: 0;
+  --pf-v5-c-tabs__link--focus--after--BorderWidth: 0;
+  --pf-v5-c-tabs__link--active--after--BorderWidth: 0;
+  --pf-v5-c-tabs__item--m-current__link--after--BorderWidth: 0;
+  /* pf-m-box draws ::before bottom/right hairlines on every link — kill them */
+  --pf-v5-c-tabs__link--before--BorderTopWidth: 0;
+  --pf-v5-c-tabs__link--before--BorderBottomWidth: 0;
+  --pf-v5-c-tabs__link--before--BorderLeftWidth: 0;
+  --pf-v5-c-tabs__link--before--BorderRightWidth: 0;
+  --pf-v5-c-tabs__link--disabled--before--BorderRightWidth: 0;
+  --pf-v5-c-tabs__item--m-current__link--before--BorderTopWidth: 0;
+}
+
+body .pf-v5-c-tabs:not(.pf-m-vertical) .pf-v5-c-tabs__list {
+  background-color: var(--otpki-muted);
+  border: 0;
+  border-radius: var(--otpki-radius-md);
+  padding: 0.25rem;
+  gap: 0.25rem;
+  width: fit-content;
+  max-width: 100%;
+}
+
+body .pf-v5-c-tabs:not(.pf-m-vertical) .pf-v5-c-tabs__link {
+  border-radius: var(--otpki-radius-sm);
+  padding-block: 0.375rem;
+  padding-inline: 0.75rem;
+  white-space: nowrap;
+  justify-content: center;
+  text-align: center;
+}
+
+body .pf-v5-c-tabs:not(.pf-m-vertical) .pf-v5-c-tabs__item.pf-m-current > .pf-v5-c-tabs__link {
+  background-color: var(--otpki-background);
+  color: var(--otpki-foreground);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.15);
+}
+
+/* data lists (account credential rows, admin lists) sit flat on the card */
+body .pf-v5-c-data-list {
+  --pf-v5-c-data-list--BackgroundColor: transparent;
+  --pf-v5-c-data-list__item--BackgroundColor: transparent;
+  --pf-v5-c-data-list--BorderTopColor: var(--otpki-border);
+  --pf-v5-c-data-list--sm--BorderTopColor: var(--otpki-border);
+  --pf-v5-c-data-list__item--BorderBottomColor: var(--otpki-border);
+  --pf-v5-c-data-list__item--sm--BorderBottomColor: var(--otpki-border);
+}
+
+/* jump-links (admin "Jump to section" rail): muted text, fg + bar on current */
+body .pf-v5-c-jump-links {
+  --pf-v5-c-jump-links__link-text--Color: var(--otpki-muted-foreground);
+  --pf-v5-c-jump-links__item--m-current__link-text--Color: var(--otpki-foreground);
+  --pf-v5-c-jump-links__item--m-current__link--before--BorderColor: var(--otpki-foreground);
+  --pf-v5-c-jump-links__list--before--BorderColor: var(--otpki-border);
+}
+
+body .pf-v5-c-jump-links__label {
+  --pf-v5-c-jump-links__label--FontWeight: 600;
+  --pf-v5-c-jump-links__label--FontSize: 0.8125rem;
+  color: var(--otpki-foreground);
+  margin-block-end: var(--pf-v5-global--spacer--sm);
+}
+
+body .pf-v5-c-jump-links__list {
+  margin-inline-start: 0;
+}
+
+body .pf-v5-c-jump-links__link {
+  background: none;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  width: 100%;
+  text-align: start;
+}
+
+body .pf-v5-c-jump-links__link:hover .pf-v5-c-jump-links__link-text {
+  color: var(--otpki-foreground);
+}
+
+/* empty states + plain card surfaces stay on the card tone */
+body .pf-v5-c-empty-state {
+  --pf-v5-c-empty-state--BackgroundColor: transparent;
+}
+
+/* pagination + overflowing filter chips: flat surfaces */
+body .pf-v5-c-pagination {
+  --pf-v5-c-pagination--BackgroundColor: transparent;
+  --pf-v5-c-pagination--m-bottom--BackgroundColor: transparent;
+  --pf-v5-c-pagination--m-sticky--BackgroundColor: transparent;
+  --pf-v5-c-pagination--m-sticky--BoxShadow: none;
+}
+
+body .pf-v5-c-chip-group,
+body .pf-v5-c-chip {
+  --pf-v5-c-chip--BackgroundColor: var(--otpki-muted);
+  --pf-v5-c-chip--BorderColor: var(--otpki-border);
+  --pf-v5-c-chip--BorderRadius: var(--otpki-radius-sm);
+}
+
+/* ---------- Menus / dropdowns / selects / popovers ----------------- */
+
+body .pf-v5-c-menu,
+body .pf-v5-c-popover__content {
+  --pf-v5-c-menu--BackgroundColor: var(--otpki-popover);
+  --pf-v5-c-menu--BoxShadow: var(--otpki-shadow-md);
+  border: 1px solid var(--otpki-border);
+  border-radius: var(--otpki-radius-md);
+}
+
+body .pf-v5-c-menu__list-item {
+  --pf-v5-c-menu__list-item--hover--BackgroundColor: var(--otpki-accent);
+  --pf-v5-c-menu__list-item--focus-within--BackgroundColor: var(--otpki-accent);
+  --pf-v5-c-menu__item--Color: var(--otpki-popover-foreground);
+}
+
+body .pf-v5-c-menu__item {
+  border-radius: var(--otpki-radius-sm);
+}
+
+/* ---------- Modals / drawers --------------------------------------- */
+
+body .pf-v5-c-modal-box,
+body .pf-v5-c-drawer__panel,
+body .pf-v5-c-popover__content {
+  --pf-v5-c-modal-box--BackgroundColor: var(--otpki-popover);
+  --pf-v5-c-modal-box--BoxShadow: var(--otpki-shadow-lg);
+  border-radius: var(--otpki-radius-lg);
+}
+
+body .pf-v5-c-modal-box {
+  border: 1px solid var(--otpki-border);
+}
+
+body .pf-v5-c-popover {
+  --pf-v5-c-popover__content--BackgroundColor: var(--otpki-popover);
+}
+
+/* ---------- Alerts ------------------------------------------------- */
+
+body .pf-v5-c-alert {
+  --pf-v5-c-alert--BackgroundColor: var(--otpki-card);
+  --pf-v5-c-alert--BoxShadow: none;
+  border: 1px solid var(--otpki-border);
+  border-radius: var(--otpki-radius-md);
+  --pf-v5-c-alert--m-danger--BorderTopColor: var(--otpki-destructive);
+  --pf-v5-c-alert--m-danger__icon--Color: var(--otpki-destructive);
+  --pf-v5-c-alert--m-danger__title--Color: var(--otpki-destructive);
+  --pf-v5-c-alert--m-success--BorderTopColor: var(--otpki-success);
+  --pf-v5-c-alert--m-success__icon--Color: var(--otpki-success);
+  --pf-v5-c-alert--m-success__title--Color: var(--otpki-success);
+  --pf-v5-c-alert--m-warning--BorderTopColor: var(--otpki-warning);
+  --pf-v5-c-alert--m-warning__icon--Color: var(--otpki-warning);
+  --pf-v5-c-alert--m-warning__title--Color: var(--otpki-warning);
+  --pf-v5-c-alert--m-info--BorderTopColor: var(--otpki-info);
+  --pf-v5-c-alert--m-info__icon--Color: var(--otpki-info);
+  --pf-v5-c-alert--m-info__title--Color: var(--otpki-info);
+}
+
+/* ---------- Labels / badges ---------------------------------------- */
+
+body .pf-v5-c-label {
+  --pf-v5-c-label--BorderRadius: 9999px;
+}
+
+body .pf-v5-c-badge {
+  --pf-v5-c-badge--BorderRadius: 9999px;
+  --pf-v5-c-badge--m-unread--BackgroundColor: var(--otpki-primary);
+  --pf-v5-c-badge--m-unread--Color: var(--otpki-primary-foreground);
+  --pf-v5-c-badge--m-read--BackgroundColor: var(--otpki-secondary);
+  --pf-v5-c-badge--m-read--Color: var(--otpki-secondary-foreground);
+}
+
+/* ---------- Checks / radios / switches ----------------------------- */
+
+body .pf-v5-c-check__input,
+body .pf-v5-c-radio__input {
+  accent-color: var(--otpki-primary);
+}
+
+body .pf-v5-c-check__label,
+body .pf-v5-c-radio__label {
+  color: var(--otpki-foreground);
+  font-weight: 500;
+}
+
+body .pf-v5-c-check__description,
+body .pf-v5-c-radio__description {
+  color: var(--otpki-muted-foreground);
+}
+
+body .pf-v5-c-switch__input:not(:disabled):checked ~ .pf-v5-c-switch__toggle {
+  --pf-v5-c-switch__input--checked__toggle--BackgroundColor: var(--otpki-primary);
+}
+
+/* ---------- Tooltips ----------------------------------------------- */
+
+body .pf-v5-c-tooltip__content {
+  --pf-v5-c-tooltip__content--BackgroundColor: var(--otpki-primary);
+  --pf-v5-c-tooltip__content--Color: var(--otpki-primary-foreground);
+  border-radius: var(--otpki-radius-sm);
+  font-size: 0.75rem;
+}
+
+/* ---------- Focus rings (shadcn ring style) ------------------------ */
+
+body .pf-v5-c-button:focus-visible,
+body .pf-v5-c-menu__item:focus-visible,
+body .pf-v5-c-nav__link:focus-visible,
+body .pf-v5-c-tabs__link:focus-visible,
+a:focus-visible,
+body .pf-v5-c-check__input:focus-visible,
+body .pf-v5-c-radio__input:focus-visible,
+body .pf-v5-c-switch__input:focus-visible ~ .pf-v5-c-switch__toggle {
+  outline: none;
+  box-shadow: var(--otpki-ring-shadow);
+}
+
+/* ---------- Scrollbars --------------------------------------------- */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--otpki-border) transparent;
+}

@@ -64,10 +64,9 @@
 
     <div class="space-y-2">
       <Label for="otp">
-          {@render msg('loginOtpOneTime')()}
+        {@render msg('loginOtpOneTime')()}
       </Label>
 
-      <!-- svelte-ignore a11y_autofocus -->
       <Input
         id="otp"
         name="otp"

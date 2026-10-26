@@ -105,7 +105,10 @@
         name="code"
         value={oauth.code}
       />
-      <div id="kc-form-buttons" class="grid gap-2 sm:grid-cols-2">
+      <div
+        id="kc-form-buttons"
+        class="grid gap-2 sm:grid-cols-2"
+      >
         <Button
           name="accept"
           id="kc-login"

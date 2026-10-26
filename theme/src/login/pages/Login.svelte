@@ -48,7 +48,7 @@
   {#snippet infoNode()}
     <div id="kc-registration-container">
       <div id="kc-registration">
-        <div class="flex items-center justify-centertext-sm text-muted-foreground">
+        <div class="justify-centertext-sm flex items-center text-muted-foreground">
           <span>{@render msg('noAccount')()}</span>
           <Button
             tabindex={8}
@@ -64,7 +64,10 @@
   {#snippet socialProvidersNode()}
     {@const providers = social?.providers}
     {#if realm.password && !!providers && !!providers.length}
-      <div id="kc-social-providers" class="space-y-3">
+      <div
+        id="kc-social-providers"
+        class="space-y-3"
+      >
         <div class="space-y-2">
           <h2 class="text-sm font-medium text-muted-foreground">{@render msg('identity-provider-login-label')()}</h2>
           <div class={clsx('grid gap-2', providers.length > 3 ? 'grid-cols-2' : 'grid-cols-1')}>
@@ -89,7 +92,10 @@
       </div>
     {/if}
   {/snippet}
-  <div id="kc-form" class="space-y-4">
+  <div
+    id="kc-form"
+    class="space-y-4"
+  >
     <div id="kc-form-wrapper">
       {#if realm.password}
         <form
@@ -111,7 +117,6 @@
                     ? msg('usernameOrEmail')
                     : msg('email'))()}
               </Label>
-              <!-- svelte-ignore a11y_autofocus -->
               <Input
                 tabindex={2}
                 id="username"
@@ -160,7 +165,7 @@
               {#if realm.rememberMe && !usernameHidden}
                 <Label
                   for="rememberMe"
-                  class="inline-flex! items-center! gap-2! w-fit cursor-pointer text-sm font-normal text-muted-foreground whitespace-nowrap"
+                  class="inline-flex! w-fit cursor-pointer items-center! gap-2! text-sm font-normal whitespace-nowrap text-muted-foreground"
                 >
                   <input
                     type="hidden"

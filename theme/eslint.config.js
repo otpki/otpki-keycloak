@@ -51,6 +51,17 @@ export default ts.config(
     },
   },
   {
-    ignores: ['build/', '.svelte-kit/', 'dist/', 'public/'],
+    ignores: [
+      'build/',
+      '.svelte-kit/',
+      'dist/',
+      'dist_keycloak/',
+      'public/',
+      'storybook-static/',
+      // Keycloakify-managed React extension sources (see src/.gitignore)
+      'src/admin/',
+      'src/account/',
+      'src/shared/',
+    ],
   },
 );

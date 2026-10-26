@@ -58,7 +58,11 @@
     </form>
     <div id="kc-info-message">
       {#if !logoutConfirm.skipLink && client.baseUrl}
-        <Button href={client.baseUrl} variant="link" class="h-auto px-0 py-0 text-sm">
+        <Button
+          href={client.baseUrl}
+          variant="link"
+          class="h-auto px-0 py-0 text-sm"
+        >
           {@render msg('backToApplication')()}
         </Button>
       {/if}

@@ -12,7 +12,8 @@ const config = {
   bracketSpacing: true,
   arrowParens: 'always',
   singleAttributePerLine: true,
-  plugins: ['prettier-plugin-svelte'],
+  plugins: ['prettier-plugin-svelte', 'prettier-plugin-tailwindcss'],
+  tailwindStylesheet: './src/app.css',
   overrides: [
     {
       files: '*.svelte',

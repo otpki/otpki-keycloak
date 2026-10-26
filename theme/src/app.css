@@ -1,40 +1,38 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
-@import "tw-animate-css";
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
+/* relative urls — Vite emits the woff2 files as bundle assets so they
+   resolve under Keycloak's /resources/<theme>/ prefix in production */
 @font-face {
-  font-family: "Geist";
-  src: url("/fonts/geist/Geist/webfonts/Geist-variableweight.woff2")
-    format("woff2");
+  font-family: 'Geist';
+  src: url('./fonts/Geist-variableweight.woff2') format('woff2');
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Geist Mono";
-  src: url("/fonts/geist/GeistMono/webfonts/GeistMono-variableweight.woff2")
-    format("woff2");
+  font-family: 'Geist Mono';
+  src: url('./fonts/GeistMono-variableweight.woff2') format('woff2');
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Geist";
-  src: url("/fonts/geist/Geist/webfonts/Geist-Italic-variableweight.woff2")
-    format("woff2");
+  font-family: 'Geist';
+  src: url('./fonts/Geist-Italic-variableweight.woff2') format('woff2');
   font-weight: 100 900;
   font-style: italic;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Geist Mono";
-  src: url("/fonts/geist/GeistMono/webfonts/GeistMono-Italic-variableweight.woff2")
-    format("woff2");
+  font-family: 'Geist Mono';
+  src: url('./fonts/GeistMono-Italic-variableweight.woff2') format('woff2');
   font-weight: 100 900;
   font-style: italic;
   font-display: swap;
@@ -74,11 +72,10 @@
   --sidebar-border: oklch(0.929 0.013 255.508);
   --sidebar-ring: oklch(0.704 0.04 256.788);
   --font-geist-sans:
-    "Geist", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    "Inter", "Segoe UI", "Roboto", sans-serif;
+    'Geist', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', 'Roboto', sans-serif;
   --font-geist-mono:
-    "Geist Mono", ui-monospace, SFMono-Regular, "Roboto Mono", Menlo, Monaco,
-    "Liberation Mono", "DejaVu Sans Mono", "Courier New", monospace;
+    'Geist Mono', ui-monospace, SFMono-Regular, 'Roboto Mono', Menlo, Monaco, 'Liberation Mono', 'DejaVu Sans Mono',
+    'Courier New', monospace;
 }
 
 .dark {

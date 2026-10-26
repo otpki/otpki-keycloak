@@ -27,7 +27,10 @@
     {@render msg('pageExpiredTitle')()}
   {/snippet}
 
-  <div id="instruction1" class="space-y-3">
+  <div
+    id="instruction1"
+    class="space-y-3"
+  >
     <div class="flex flex-col gap-3 rounded-lg border bg-card p-4 sm:flex-row sm:items-center sm:justify-between">
       <p class="text-sm font-medium text-foreground">
         {@render msg('pageExpiredMsg1')()}

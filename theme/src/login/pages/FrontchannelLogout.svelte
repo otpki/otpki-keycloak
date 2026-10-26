@@ -1,0 +1,64 @@
+<script lang="ts">
+  import type { PageProps } from '@keycloakify/svelte/login/pages/PageProps';
+  import { Button } from '$lib/components/ui/button';
+  import type { KcContext } from '../KcContext';
+  import type { I18n } from '../i18n';
+
+  const {
+    Template,
+    kcContext,
+    i18n,
+    doUseDefaultCss,
+    classes,
+  }: PageProps<Extract<KcContext, { pageId: 'frontchannel-logout.ftl' }>, I18n> = $props();
+
+  const { logout } = $derived(kcContext);
+
+  const { msg, msgStr } = $derived($i18n);
+  let iframeLoadCount = $state(0);
+  $effect(() => {
+    if (!kcContext.logout.logoutRedirectUri) {
+      return;
+    }
+    if (iframeLoadCount !== kcContext.logout.clients.length) {
+      return;
+    }
+    window.location.replace(kcContext.logout.logoutRedirectUri);
+  });
+</script>
+
+<Template
+  {kcContext}
+  {i18n}
+  {doUseDefaultCss}
+  {classes}
+  documentTitle={msgStr('frontchannel-logout.title')}
+>
+  {#snippet headerNode()}
+    {@render msg('frontchannel-logout.title')()}
+  {/snippet}
+  <div class="space-y-4">
+    <p class="text-sm text-muted-foreground">{@render msg('frontchannel-logout.message')()}</p>
+    <ul class="list-inside list-disc space-y-1 text-sm text-muted-foreground">
+      {#each logout.clients as client (client.name)}
+        <li>
+          {client.name}
+          <!-- svelte-ignore a11y_missing_attribute -->
+          <iframe
+            src={client.frontChannelLogoutUrl}
+            style:display="none"
+            onload={() => iframeLoadCount++}
+          ></iframe>
+        </li>{/each}
+    </ul>
+    {#if logout.logoutRedirectUri}
+      <Button
+        id="continue"
+        href={logout.logoutRedirectUri}
+        class="w-full"
+      >
+        {msgStr('doContinue')}
+      </Button>
+    {/if}
+  </div>
+</Template>

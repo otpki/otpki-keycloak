@@ -38,11 +38,17 @@
   {#snippet headerNode()}
     {@render msg('loginTotpTitle')()}
   {/snippet}
-  <ol id="kc-totp-settings" class="space-y-5 text-sm">
+  <ol
+    id="kc-totp-settings"
+    class="space-y-5 text-sm"
+  >
     <li class="space-y-2">
       <p class="font-medium">{@render msg('loginTotpStep1')()}</p>
 
-      <ul id="kc-totp-supported-apps" class="list-disc space-y-1 pl-5 text-muted-foreground">
+      <ul
+        id="kc-totp-supported-apps"
+        class="list-disc space-y-1 pl-5 text-muted-foreground"
+      >
         {#each totp.supportedApplications as app (app)}
           <li>{@render advancedMsg(app)()}</li>
         {/each}
@@ -53,7 +59,10 @@
       <li class="space-y-2">
         <p class="font-medium">{@render msg('loginTotpManualStep2')()}</p>
         <p>
-          <span id="kc-totp-secret-key" class="inline-block rounded-md border bg-muted px-3 py-1 font-mono text-xs">{totp.totpSecretEncoded}</span>
+          <span
+            id="kc-totp-secret-key"
+            class="inline-block rounded-md border bg-muted px-3 py-1 font-mono text-xs">{totp.totpSecretEncoded}</span
+          >
         </p>
         <div>
           <Button
@@ -193,7 +202,7 @@
     <div class="space-y-2">
       <Label
         for="logout-sessions"
-        class="inline-flex! items-center! gap-2! w-fit cursor-pointer text-sm font-normal text-muted-foreground whitespace-nowrap"
+        class="inline-flex! w-fit cursor-pointer items-center! gap-2! text-sm font-normal whitespace-nowrap text-muted-foreground"
       >
         <input
           type="hidden"

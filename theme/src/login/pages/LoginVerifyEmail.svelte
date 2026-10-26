@@ -34,7 +34,11 @@
         {@render msg('emailVerifyInstruction2')()}
       </p>
       <div class="mt-2 flex items-center gap-2">
-        <Button href={url.loginAction} variant="link" class="h-auto px-0 py-0 text-sm">
+        <Button
+          href={url.loginAction}
+          variant="link"
+          class="h-auto px-0 py-0 text-sm"
+        >
           {@render msg('doClickHere')()}
         </Button>
         <span>{@render msg('emailVerifyInstruction3')()}</span>

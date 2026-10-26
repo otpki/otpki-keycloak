@@ -30,7 +30,10 @@
   {#snippet headerNode()}
     {@render msg('errorTitle')()}
   {/snippet}
-  <div id="kc-error-message" class="space-y-4">
+  <div
+    id="kc-error-message"
+    class="space-y-4"
+  >
     <p class="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
       {@html kcSanitize(message.summary)}
     </p>

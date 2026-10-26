@@ -4,7 +4,7 @@
   import { useSetClassName } from '@keycloakify/svelte/tools/useSetClassName';
   import { kcSanitize } from 'keycloakify/lib/kcSanitize';
   import { clsx } from 'keycloakify/tools/clsx';
-  import { onMount } from 'svelte';
+  import { onMount, untrack } from 'svelte';
   import faviconSrc from '../assets/otpki.png';
   import { Button } from '$lib/components/ui/button';
   import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '$lib/components/ui/card';
@@ -15,7 +15,6 @@
     displayInfo = false,
     displayMessage = true,
     displayRequiredFields = false,
-    showAnotherWayIfPresent = true,
     headerNode,
     socialProvidersNode = null,
     infoNode = null,
@@ -27,7 +26,7 @@
   }: TemplateProps<KcContext, I18n> = $props();
 
   const { msgStr, currentLanguage, enabledLanguages } = $i18n;
-  const { realm, auth, url, message, isAppInitiatedAction } = kcContext;
+  const { realm, auth, url, message, isAppInitiatedAction } = untrack(() => kcContext);
 
   onMount(() => {
     document.title = documentTitle ?? msgStr('loginTitle', realm.displayName);
@@ -40,10 +39,10 @@
 
   useSetClassName({
     qualifiedName: 'body',
-    className: bodyClassName ?? 'min-h-full bg-background text-foreground antialiased',
+    className: untrack(() => bodyClassName) ?? 'min-h-full bg-background text-foreground antialiased',
   });
 
-  const { isReadyToRender } = useInitialize({ kcContext, doUseDefaultCss: false });
+  const { isReadyToRender } = useInitialize({ kcContext: untrack(() => kcContext), doUseDefaultCss: false });
 
   const getAlertClassName = (type: 'error' | 'warning' | 'success' | 'info') =>
     clsx('rounded-md border px-3 py-2 text-sm', {
@@ -67,7 +66,7 @@
         </div>
 
         {#if realm.displayName}
-          <p class="mb-1 text-xs uppercase tracking-[0.12em] text-muted-foreground">{realm.displayName}</p>
+          <p class="mb-1 text-xs tracking-[0.12em] text-muted-foreground uppercase">{realm.displayName}</p>
         {/if}
 
         {#if !(auth !== undefined && auth.showUsername && !auth.showResetCredentials)}
@@ -103,7 +102,7 @@
 
         {@render children?.()}
 
-        {#if auth !== undefined && auth.showTryAnotherWayLink && showAnotherWayIfPresent}
+        {#if auth !== undefined && auth.showTryAnotherWayLink}
           <form
             id="kc-select-try-another-way-form"
             action={url.loginAction}
@@ -142,10 +141,10 @@
     </Card>
 
     {#if enabledLanguages.length > 1}
-      <div class="fixed bottom-4 right-4 z-50 sm:bottom-6 sm:right-6">
+      <div class="fixed right-4 bottom-4 z-50 sm:right-6 sm:bottom-6">
         <details class="group relative">
           <summary
-            class="list-none cursor-pointer rounded-full border bg-background px-3 py-2 text-xs text-foreground shadow-lg transition-colors hover:bg-muted [&::-webkit-details-marker]:hidden"
+            class="cursor-pointer list-none rounded-full border bg-background px-3 py-2 text-xs text-foreground shadow-lg transition-colors hover:bg-muted [&::-webkit-details-marker]:hidden"
           >
             <span class="inline-flex items-center gap-2">
               <span aria-hidden="true">🌐</span>
@@ -153,7 +152,9 @@
             </span>
           </summary>
 
-          <div class="absolute bottom-12 right-0 flex max-h-72 w-56 flex-col gap-1 overflow-y-auto rounded-xl border bg-popover p-2 shadow-2xl">
+          <div
+            class="absolute right-0 bottom-12 flex max-h-72 w-56 flex-col gap-1 overflow-y-auto rounded-xl border bg-popover p-2 shadow-2xl"
+          >
             {#each enabledLanguages as enabledLanguage (enabledLanguage.languageTag)}
               <a
                 class={clsx(

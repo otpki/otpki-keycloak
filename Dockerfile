@@ -1,4 +1,4 @@
-ARG KEYCLOAK_VERSION=26.8.1
+ARG KEYCLOAK_VERSION=26.8.2
 
 # PostgreSQL client
 #
@@ -9,7 +9,8 @@ ARG KEYCLOAK_VERSION=26.8.1
 # Build the smallest practical psql payload
 FROM registry.access.redhat.com/ubi9/ubi-minimal AS psql-builder
 USER root
-RUN microdnf install -y \
+RUN microdnf update -y && \
+    microdnf install -y \
         postgresql \
         --setopt=install_weak_deps=0 \
         --setopt=tsflags=nodocs && \

@@ -1,0 +1,31 @@
+name: Check
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: check-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  container:
+    permissions:
+      contents: read
+      checks: write
+    uses: otpki/.github/.github/workflows/reusable-container-check.yml@v1
+    with:
+      image: otpki-keycloak
+      node-cache-path: theme/package-lock.json
+      pre-build-commands: |
+        cd theme
+        npm ci
+        npm run check
+        npm run build-keycloak-theme
+      pre-build-artifacts: theme/dist_keycloak

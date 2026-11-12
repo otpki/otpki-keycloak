@@ -1,0 +1,9 @@
+# Mirrors the OTPKI org-default policy (otpki/.github templates/trivy.yaml)
+# required because allow-trivy-config-override replaces the bundled config.
+severity:
+  - CRITICAL
+  - HIGH
+scan:
+  scanners:
+    - vuln
+    - secret

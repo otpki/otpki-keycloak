@@ -1,0 +1,17 @@
+# otpki-keycloak Trivy exceptions
+
+# guava 33.6.0-jre DoS during deserialization, fixed in 33.7.2, but the jar
+# ships inside quay.io/keycloak/keycloak and can't be patched here. Remove
+# when an upstream release bumps guava (KEYCLOAK_VERSION in Dockerfile).
+CVE-2026-102554 exp:2027-02-10
+
+# sqlite-libs 3.34.1-11.el9_8 (UBI9 base). no fixed el9 package available.
+# Keycloak doesn't use SQLite; FTS5/session/.recover vectors are not reachable.
+CVE-2026-119373 exp:2027-05-12
+CVE-2026-119374 exp:2027-05-12
+CVE-2026-119379 exp:2027-05-12
+CVE-2026-119586 exp:2027-05-12
+
+# openjdk-headless eMudhra CA distrust, no fixed el9 package. the removed
+# roots are not used by this deployment's PKI.
+CVE-2026-91403 exp:2027-05-12
